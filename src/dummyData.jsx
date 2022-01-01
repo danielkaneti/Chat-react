@@ -1,6 +1,4 @@
-export const users = 
-
-  {
+export const users =  {
     id: '1',
     name: 'lee levy',
     
@@ -10,5 +8,5 @@ export const users =
                 { id: '3',
                 name: 'matan elkabes',
                 lastName: 'elkabes'}]
-  
   }
+

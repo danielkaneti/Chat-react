@@ -12,6 +12,7 @@ function Chat() {
         setUserclick(userSelected)
 
     }
+ 
     return (
         <Header>
             <Sidebar users={users} handleSelected={handleSelected}/>
