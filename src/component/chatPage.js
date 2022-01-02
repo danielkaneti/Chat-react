@@ -4,32 +4,51 @@ import { Avatar,IconButton } from '@material-ui/core';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 import MicIcon from '@material-ui/icons/Mic'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
-import Message from './message'
+import MessageCmp from './message'
+import {useDispatch, useSelector} from 'redux'
+import  {sendMessageAction} from '../redux/action/messagesAction';
 
-const ChatPage = (user) => {
+const ChatPage = ({user, userActive}) => {
+    const allMessage = useSelector((state) => 
+        state.messages
+            .filter(({msg, time, sender, receiver}) => {
+                return ( 
+                    [sender?.id ?? null, receiver?.id ?? null].includes(userActive?.id) || 
+                    [sender?.id ?? null, receiver?.id ?? null].includes(user?.id) 
+                )
+            })
+            .sort(({time: t1}, {time: t2}) => t1 - t2)
+    );
 
 
+    const [userSeleced,setUserSelected] = useState({});
+    const [input,setInput] = useState("")
+    const dispatch = useDispatch();
 
-const [userSeleced,setUserSelected]=useState({});
     useEffect(() => {
         setUserSelected(user.user);
         console.log(user);
-      }, [user]);   
-    const [input,setInput]=useState("")
-
-    const ShowMassegw=()=> {
-        return (
-        
-<Message ></Message>
-        )
-
-    }
-
-    const sendMassegw=(e)=> {
-        e.preventDefault();
+      }, [user]);  
       
-
+    const ShowMassegw = () => {
+        return allMessage.map(({msg, time, sender, receiver}) => (    
+                <MessageCmp 
+                    key={time}
+                    sender={sender}
+                    message={msg}
+                    time={time} 
+                    isMyMessage={sender?.id === userActive?.id}
+                />
+            ) 
+         )
     }
+
+    const sendMessege=(e)=> {
+        e.preventDefault();
+        dispatch(sendMessageAction(userActive, user, input));
+        setInput('');
+    }
+
     return (
         <Container>
            <Header>
@@ -47,10 +66,10 @@ const [userSeleced,setUserSelected]=useState({});
                 {ShowMassegw}
            </MesgageContanir>
            <InputCOntanir>
-           <InsertEmoticonIcon/>
-           <Input  onchange={(e)=>setInput(e.target.value)}/>
-           <button hidden onclick={sendMassegw}/>
-           <MicIcon/>
+                <InsertEmoticonIcon/>
+                <Input  onchange={(e)=>setInput(e.target.value)}/>
+                <button hidden onclick={sendMessege} disabled={!input}/>
+                <MicIcon/>
            </InputCOntanir>
         </Container>
     )

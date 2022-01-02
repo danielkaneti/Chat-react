@@ -17,7 +17,7 @@ function Chat() {
         <Header>
             <Sidebar users={users} handleSelected={handleSelected}/>
             <Chatontanir>
-            <ChatPage user={userClick}/>
+                <ChatPage user={userClick} userActive={users}/>
             </Chatontanir>
         </Header>
     )
