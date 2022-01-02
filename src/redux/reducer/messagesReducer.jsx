@@ -1,4 +1,3 @@
-import _ from 'lodash'; // npm i -S lodash
 import { SEND }  from '../action/messagesAction';
 
 const initState = {
