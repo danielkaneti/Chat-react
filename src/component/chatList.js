@@ -2,21 +2,12 @@ import React from 'react';
 import styled from 'styled-components'
 import {Avatar} from '@material-ui/core'
 
-
-
-
-
-// onClick={(e)=>onSelected(e,avatarId)}
-const ChatList = ({name,onSelected,userSelected}) => {
-
-
-
+const ChatList = ({user, userSelected, onSelected}) => {
     return (
-        <div onClick={(e)=>onSelected(e,userSelected)} >
-           < Container>
-           <UseAvatar/>
-           <p>{name}</p>
-         
+        <div onClick={onSelected} >
+           <Container>
+                <UseAvatar src={user.img}/>
+                <p>{user.name}</p>               
            </Container>
         </div>
     )
