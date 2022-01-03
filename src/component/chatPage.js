@@ -4,53 +4,73 @@ import { Avatar,IconButton } from '@material-ui/core';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 import MicIcon from '@material-ui/icons/Mic'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
-import Message from './message'
+import MessageCmp from './message'
+import { useSelector,useDispatch } from 'react-redux'
+import  {sendMessageAction} from '../redux/action/messagesAction';
 
-const ChatPage = (user) => {
-
-
-
-const [userSeleced,setUserSelected]=useState({});
-    useEffect(() => {
-        setUserSelected(user.user);
-        console.log(user);
-      }, [user]);   
-    const [input,setInput]=useState("")
-
-    const ShowMassegw=()=> {
-        return (
+const ChatPage = ({userType}) => {
+    const { messages, connectedUser, activeUser } = useSelector((state) => {
+        const {connectedUser, activeUser} = state.users[userType] || {};
         
-<Message ></Message>
-        )
+        const messages = activeUser && connectedUser && state.messages.messages
+        ?.filter(({msg, time, sender, receiver}) => {
+            const a = sender?.id === connectedUser.id && receiver?.id === activeUser.id;
+            const b = sender?.id === activeUser.id && receiver?.id === connectedUser.id;
+            return a || b;
+        })
+        .sort(({time: t1}, {time: t2}) => t1 - t2) || [];
 
-    }
+        return { messages, connectedUser, activeUser }
+    });
 
-    const sendMassegw=(e)=> {
-        e.preventDefault();
+    console.log(messages);
+
+
+    const [input, setInput] = useState('')
+    const dispatch = useDispatch();
+
+    const handleChange = (e) => setInput(e.target.value);
       
-
+    const getMessageListItems = () => {
+        return messages.map(({msg, time, sender, receiver}, index) => (    
+                <MessageCmp                 
+                    index={index}
+                    sender={sender}
+                    message={msg}
+                    time={time} 
+                    isMyMessage={sender?.id === connectedUser?.id}
+                />
+            ) 
+         )
     }
+
+    const sendMessege=(e)=> {
+        e.preventDefault();
+        dispatch(sendMessageAction(connectedUser, activeUser, input));
+        setInput('');
+    }
+
     return (
         <Container>
            <Header>
-               <Avatar/>
+               <Avatar src={activeUser?.img}/>
                <HeaderInfo>
-                   <p>{userSeleced.name}</p>
+                   <p>{activeUser?.name}</p>
                    <p>Last sine</p>
                </HeaderInfo>
                <IconButton>
                 <AttachFileIcon/>
                </IconButton>
-
            </Header>
+
            <MesgageContanir>
-                {ShowMassegw}
+                {getMessageListItems()}
            </MesgageContanir>
            <InputCOntanir>
-           <InsertEmoticonIcon/>
-           <Input  onchange={(e)=>setInput(e.target.value)}/>
-           <button hidden onclick={sendMassegw}/>
-           <MicIcon/>
+                <InsertEmoticonIcon/>
+                <Input value={input} onChange={handleChange} />
+                <button hidden onClick={sendMessege} disabled={!input}/>
+                <MicIcon/>
            </InputCOntanir>
         </Container>
     )

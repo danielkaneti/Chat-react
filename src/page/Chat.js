@@ -2,22 +2,15 @@ import React ,{useState}from 'react';
 import styled from 'styled-components'
 import ChatPage from '../component/chatPage';
 import Sidebar from '../component/Sidebar'
-import  {users}  from '../dummyData';
 
 
 
-function Chat() {
-    const [userClick,setUserclick] =useState('');
-    const handleSelected=(e,userSelected)=>{
-        setUserclick(userSelected)
-
-    }
- 
+function Chat({userType}) {
     return (
         <Header>
-            <Sidebar users={users} handleSelected={handleSelected}/>
+            <Sidebar userType={userType}/>
             <Chatontanir>
-            <ChatPage user={userClick}/>
+                <ChatPage userType={userType}/>
             </Chatontanir>
         </Header>
     )
