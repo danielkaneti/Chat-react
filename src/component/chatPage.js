@@ -56,7 +56,7 @@ const ChatPage = ({userType}) => {
                <Avatar src={activeUser?.img}/>
                <HeaderInfo>
                    <p>{activeUser?.name}</p>
-                   <p>Last sine</p>
+                
                </HeaderInfo>
                <IconButton>
                 <AttachFileIcon/>
